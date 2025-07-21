@@ -4,85 +4,64 @@
     <title>Voyage à Florence</title>
   </head>
   <body>
-    <h1>Bienvenue à notre site web pour le voyage d'etude à Florence</h1>
-    <p>Ce site est destiné à tracer le profit creé pour notre voyage d'étude</p>
+    <h1>Bienvenue à notre site web pour le voyage d'étude à Florence</h1>
+    <p>Ce site est destiné à tracer le profit créé pour notre voyage d'étude.</p>
 
-    <h2>Live prix échange USD/CHF</h1>
+    <h2>Live prix échange USD/CHF</h2>
     <div id="usdchf">chargement prix échange USD/CHF...</div>
 
-    <h2>Live prix action NVDA </h1>
+    <h2>Live prix action NVDA</h2>
     <div id="nvda">chargement prix NVDA...</div>
     
-    <h2>Live profit avec l'investisement NVDA</h1>
+    <h2>Live profit avec l'investissement NVDA</h2>
     <div id="profit">Calculating profit...</div>
 
-<script>
-  const sharesA       = 20;
-  const priceA_USD    = 124.60;
-  const rateA_CHF     = 0.9025;
-  const commissionA   = 30;
+    <script>
+      const sharesA       = 20;
+      const priceA_USD    = 124.60;
+      const rateA_CHF     = 0.9025;
+      const commissionA   = 30;
 
-  const sharesB       = 50;
-  const priceB_USD    = 98.80;
-  const rateB_CHF     = 0.8560;
-  const commissionB   = 40;
+      const sharesB       = 50;
+      const priceB_USD    = 98.80;
+      const rateB_CHF     = 0.8560;
+      const commissionB   = 40;
 
-  const buyCostCHF = 
-      (sharesA * priceA_USD * rateA_CHF) + commissionA
-    + (sharesB * priceB_USD * rateB_CHF) + commissionB;
+      const buyCostCHF = 
+          (sharesA * priceA_USD * rateA_CHF) + commissionA +
+          (sharesB * priceB_USD * rateB_CHF) + commissionB;
 
-  let usdchfRate = null;
-  let nvdaPrice = null;
+      let usdchfRate = null;
+      let nvdaPrice = null;
 
-  const cost = 106.17;
-  const ratePercentage = 0.4;
-  const shares = 70;
+      const cost = 106.17;
+      const ratePercentage = 0.4;
+      const shares = 70;
 
-  fetch('https://api.frankfurter.app/latest?from=USD&to=CHF')
-    .then(res => res.json())
-    .then(data => {
-      usdchfRate = data.rates.CHF;
-      document.getElementById('usdchf').innerText = `USD/CHF: ${usdchfRate}`;
-      calculateProfit();
-    })
-    .catch(err => {
-      console.error('Error loading rate:', err);
-      document.getElementById('usdchf').innerText = 'Failed to load rate';
-    });
+      fetch('./.netlify/functions/getprices')
+        .then(res => res.json())
+        .then(data => {
+          usdchfRate = parseFloat(data.usdchf);
+          nvdaPrice = parseFloat(data.currentPrice);
 
-  fetch('./.netlify/functions/getprices')
-    .then(res => res.json())
-    .then(data => {
-      nvdaPrice = parseFloat(data.currentPrice);
-      document.getElementById('nvda').innerText = `NVDA: $${nvdaPrice}`;
-      calculateProfit();
-    })
-    .catch(err => {
-      console.error(err);
-      document.getElementById('nvda').innerText = 'Failed to load NVDA price';
-    });
+          document.getElementById('usdchf').innerText = `USD/CHF: ${usdchfRate}`;
+          document.getElementById('nvda').innerText = `NVDA: $${nvdaPrice}`;
 
-    function calculateProfit() {
-    if (usdchfRate === null || nvdaPrice === null) return;
+          calculateProfit();
+        })
+        .catch(err => {
+          console.error('Fetch error:', err);
+          document.getElementById('usdchf').innerText = 'Failed to load USD/CHF';
+          document.getElementById('nvda').innerText = 'Failed to load NVDA price';
+        });
 
-    console.log({
-      nvdaPrice,
-      usdchfRate,
-      cost,
-      shares,
-      buyCommission: 70,
-      sellCommission: 50
-    });
+      function calculateProfit() {
+        if (usdchfRate === null || nvdaPrice === null) return;
 
-    const currentValueCHF = nvdaPrice * shares * usdchfRate;
-    const totalBuyCHF   = buyCostCHF;
-    console.log({ currentValueCHF, totalBuyCHF });
-    const netProfitCHF  = currentValueCHF - totalBuyCHF - 70 - 50;
-    console.log({ netProfitCHF });
-    const tripProfitCHF = netProfitCHF * ratePercentage;
-    document.getElementById('profit').innerText =
-      `Profit en CHF: ${tripProfitCHF.toFixed(2)}`;
-  }
-</script>
+        const profit = (nvdaPrice - cost) * shares * usdchfRate * ratePercentage;
+
+        document.getElementById('profit').innerText = `Estimated Profit: CHF ${profit.toFixed(2)}`;
+      }
+    </script>
   </body>
 </html>
