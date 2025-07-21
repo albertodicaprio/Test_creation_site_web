@@ -41,8 +41,9 @@
       fetch('./.netlify/functions/getprices')
         .then(res => res.json())
         .then(data => {
-          usdchfRate = parseFloat(data.usdchf);
-          nvdaPrice = parseFloat(data.currentPrice);
+            console.log("Fetched data:", data); 
+            usdchfRate = parseFloat(data.usdchf);
+            nvdaPrice = parseFloat(data.currentPrice);
 
           document.getElementById('usdchf').innerText = `USD/CHF: ${usdchfRate}`;
           document.getElementById('nvda').innerText = `NVDA: $${nvdaPrice}`;
