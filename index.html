@@ -50,7 +50,7 @@
       document.getElementById('usdchf').innerText = 'Failed to load rate';
     });
 
-  fetch('/.netlify/functions/getNvda')
+  fetch('./.netlify/functions/getprices')
     .then(res => res.json())
     .then(data => {
       nvdaPrice = parseFloat(data.currentPrice);
