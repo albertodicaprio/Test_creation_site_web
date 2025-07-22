@@ -17,52 +17,53 @@
     <div id="profit">Calculating profit...</div>
 
     <script>
-      const sharesA       = 20;
-      const priceA_USD    = 124.60;
-      const rateA_CHF     = 0.9025;
-      const commissionA   = 30;
+  const sharesA       = 20;
+  const priceA_USD    = 124.60;
+  const rateA_CHF     = 0.9025;
+  const commissionA   = 30;
 
-      const sharesB       = 50;
-      const priceB_USD    = 98.80;
-      const rateB_CHF     = 0.8560;
-      const commissionB   = 40;
+  const sharesB       = 50;
+  const priceB_USD    = 98.80;
+  const rateB_CHF     = 0.8560;
+  const commissionB   = 40;
 
-      const buyCostCHF = 
-          (sharesA * priceA_USD * rateA_CHF) + commissionA +
-          (sharesB * priceB_USD * rateB_CHF) + commissionB;
+  const shares = 70;
+  const ratePercentage = 0.4;
 
-      let usdchfRate = null;
-      let nvdaPrice = null;
+  const buyCostCHF = 
+      (sharesA * priceA_USD * rateA_CHF) + commissionA +
+      (sharesB * priceB_USD * rateB_CHF) + commissionB;
+  const avgCostCHF = buyCostCHF / shares;
 
-      const cost = 106.17;
-      const ratePercentage = 0.4;
-      const shares = 70;
+  let usdchfRate = null;
+  let nvdaPrice = null;
 
-      fetch('./.netlify/functions/getprices')
-        .then(res => res.json())
-        .then(data => {
-            console.log("Fetched data:", data); 
-            usdchfRate = parseFloat(data.usdchf);
-            nvdaPrice = parseFloat(data.currentPrice);
+  fetch('./.netlify/functions/getprices')
+    .then(res => res.json())
+    .then(data => {
+      console.log("Fetched data:", data); 
+      usdchfRate = parseFloat(data.usdchf);
+      nvdaPrice = parseFloat(data.currentPrice);
 
-          document.getElementById('usdchf').innerText = `USD/CHF: ${usdchfRate}`;
-          document.getElementById('nvda').innerText = `NVDA: $${nvdaPrice}`;
+      document.getElementById('usdchf').innerText = `USD/CHF: ${usdchfRate}`;
+      document.getElementById('nvda').innerText = `NVDA: $${nvdaPrice}`;
 
-          calculateProfit();
-        })
-        .catch(err => {
-          console.error('Fetch error:', err);
-          document.getElementById('usdchf').innerText = 'Failed to load USD/CHF';
-          document.getElementById('nvda').innerText = 'Failed to load NVDA price';
-        });
+      calculateProfit();
+    })
+    .catch(err => {
+      console.error('Fetch error:', err);
+      document.getElementById('usdchf').innerText = 'Failed to load USD/CHF';
+      document.getElementById('nvda').innerText = 'Failed to load NVDA price';
+    });
 
-      function calculateProfit() {
-        if (usdchfRate === null || nvdaPrice === null) return;
+  function calculateProfit() {
+    if (usdchfRate === null || nvdaPrice === null) return;
 
-        const profit = (nvdaPrice - cost) * shares * usdchfRate * ratePercentage;
+    const nvdaPriceCHF = nvdaPrice * usdchfRate;
+    const profit = (nvdaPriceCHF - avgCostCHF) * shares * ratePercentage;
 
-        document.getElementById('profit').innerText = `Estimated Profit: CHF ${profit.toFixed(2)}`;
-      }
+    document.getElementById('profit').innerText = `Estimated Profit: CHF ${profit.toFixed(2)}`;
+  }
     </script>
   </body>
 </html>
