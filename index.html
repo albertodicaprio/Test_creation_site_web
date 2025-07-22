@@ -63,8 +63,7 @@ function calculateProfit() {
   const profitPerShare = nvdaPriceCHF - avgCostCHF;
   const totalProfitCHF = profitPerShare * shares * ratePercentage;
   document.getElementById('profit').innerText = `Estimated Profit: CHF ${totalProfitCHF.toFixed(2)}`;
-  document.getElementById('debug').innerText = 
-    `NVDA CHF: ${nvdaPriceCHF.toFixed(2)} | avgCostCHF: ${avgCostCHF.toFixed(2)} | Shares: ${shares} | Profit Rate: ${ratePercentage * 100}%`;
+  document.getElementById('debug').innerText = `NVDA CHF: ${nvdaPriceCHF.toFixed(2)} | avgCostCHF: ${avgCostCHF.toFixed(2)} | Shares: ${shares} | Profit Rate: ${ratePercentage * 100}%`;
   
     console.log("NVDA USD price:", nvdaPrice);
     console.log("USD/CHF rate:", usdchfRate);
