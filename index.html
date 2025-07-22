@@ -37,7 +37,7 @@
 
   let usdchfRate = null;
   let nvdaPrice = null;
-
+  console.log("avgCostCHF:", avgCostCHF.toFixed(2));
   fetch('./.netlify/functions/getprices')
     .then(res => res.json())
     .then(data => {
@@ -61,6 +61,12 @@
 
     const nvdaPriceCHF = nvdaPrice * usdchfRate;
     const profit = (nvdaPriceCHF - avgCostCHF) * shares * ratePercentage;
+    console.log("NVDA USD price:", nvdaPrice);
+    console.log("USD/CHF rate:", usdchfRate);
+    console.log("NVDA CHF price:", (nvdaPrice * usdchfRate).toFixed(2));
+    console.log("avgCostCHF:", avgCostCHF.toFixed(2));
+    console.log("shares:", shares);
+    console.log("ratePercentage:", ratePercentage);
 
     document.getElementById('profit').innerText = `Estimated Profit: CHF ${profit.toFixed(2)}`;
   }
