@@ -16,7 +16,7 @@
     <h2>Live profit avec l'investissement NVDA</h2>
     <div id="profit">Calculating profit...</div>
 
-    <script>
+       <script>
   const sharesA       = 20;
   const priceA_USD    = 124.60;
   const rateA_CHF     = 0.9025;
@@ -31,13 +31,15 @@
   const ratePercentage = 0.4;
 
   const buyCostCHF = 
-      (sharesA * priceA_USD * rateA_CHF) + commissionA +
-      (sharesB * priceB_USD * rateB_CHF) + commissionB;
+    (sharesA * priceA_USD * rateA_CHF) + commissionA +
+    (sharesB * priceB_USD * rateB_CHF) + commissionB;
+    
   const avgCostCHF = buyCostCHF / shares;
+  console.log("avgCostCHF:", avgCostCHF.toFixed(2));
 
   let usdchfRate = null;
   let nvdaPrice = null;
-  console.log("avgCostCHF:", avgCostCHF.toFixed(2));
+
   fetch('./.netlify/functions/getprices')
     .then(res => res.json())
     .then(data => {
@@ -55,22 +57,20 @@
       document.getElementById('usdchf').innerText = 'Failed to load USD/CHF';
       document.getElementById('nvda').innerText = 'Failed to load NVDA price';
     });
-function calculateProfit() {
-  if (usdchfRate === null || nvdaPrice === null) return;
 
-  const nvdaPriceCHF = nvdaPrice * usdchfRate;
-  const profitPerShare = nvdaPriceCHF - avgCostCHF;
-  const totalProfitCHF = profitPerShare * shares * ratePercentage;
-  document.getElementById('profit').innerText = `Estimated Profit: CHF ${totalProfitCHF.toFixed(2)}`;
+  function calculateProfit() {
+    if (usdchfRate === null || nvdaPrice === null) return;
+    
+    const nvdaPriceCHF = nvdaPrice * usdchfRate;
+    const profitPerShare = nvdaPriceCHF - avgCostCHF;
+    const totalProfitCHF = profitPerShare * shares * ratePercentage;
 
-  console.log("NVDA USD price:", nvdaPrice);
-  console.log("USD/CHF rate:", usdchfRate);
-  console.log("NVDA CHF price:", nvdaPriceCHF.toFixed(2));
-  console.log("avgCostCHF:", avgCostCHF.toFixed(2));
-  console.log("shares:", shares);
-  console.log("ratePercentage:", ratePercentage);
+    document.getElementById('profit').innerText = `Estimated Profit: CHF ${totalProfitCHF.toFixed(2)}`;
 
-    console.log("NVDA CHF price:", (nvdaPrice * usdchfRate).toFixed(2));
+    // Debug log
+    console.log("NVDA USD price:", nvdaPrice);
+    console.log("USD/CHF rate:", usdchfRate);
+    console.log("NVDA CHF price:", nvdaPriceCHF.toFixed(2));
     console.log("avgCostCHF:", avgCostCHF.toFixed(2));
     console.log("shares:", shares);
     console.log("ratePercentage:", ratePercentage);
