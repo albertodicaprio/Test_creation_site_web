@@ -1,9 +1,6 @@
-const fetch = require('node-fetch');
 
 exports.handler = async function () {
   const API_KEY = process.env.TWELVEDATA_API_KEY;
-
-  const symbols = ['NVDA', 'GOOGL', 'USD/CHF'];
 
   const urls = {
     nvda: `https://api.twelvedata.com/price?symbol=NVDA&apikey=${API_KEY}`,
@@ -27,6 +24,12 @@ exports.handler = async function () {
       })
     };
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'Fetch failed' }) };
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: 'Fetch failed',
+        details: err.message
+      })
+    };
   }
 };
