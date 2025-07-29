@@ -16,6 +16,12 @@
     <h2>Live profit avec l'investissement NVDA</h2>
     <div id="profit">Calculating profit...</div>
 
+    <h2>Live prix action GOOGL</h2>
+    <div id="googl">chargement prix GOOGL...</div>
+
+    <h2>Live profit (NVDA + GOOGL, 40%)</h2>
+    <div id="profit">Calculating combined profit...</div>
+
        <script>
   const sharesA       = 20;
   const priceA_USD    = 124.60;
@@ -46,35 +52,58 @@
       console.log("Fetched data:", data); 
       usdchfRate = parseFloat(data.usdchf);
       nvdaPrice = parseFloat(data.currentPrice);
+      googlPrice = parseFloat(data.googlPrice)
 
       document.getElementById('usdchf').innerText = `USD/CHF: ${usdchfRate}`;
       document.getElementById('nvda').innerText = `NVDA: $${nvdaPrice}`;
+      document.getElementById('googl').innerText = `GOOGL: $${googlPrice}`;
 
-      calculateProfit();
-    })
-    .catch(err => {
-      console.error('Fetch error:', err);
-      document.getElementById('usdchf').innerText = 'Failed to load USD/CHF';
-      document.getElementById('nvda').innerText = 'Failed to load NVDA price';
-    });
+   function calculateProfit() {
+  if (usdchfRate === null || nvdaPrice === null || googlPrice === null) return;
 
-  function calculateProfit() {
-    if (usdchfRate === null || nvdaPrice === null) return;
-    
-    const nvdaPriceCHF = nvdaPrice * usdchfRate;
-    const profitPerShare = nvdaPriceCHF - avgCostCHF;
-    const totalProfitCHF = profitPerShare * shares * ratePercentage;
+  const sharesA       = 20;
+  const priceA_USD    = 124.60;
+  const rateA_CHF     = 0.9025;
+  const commissionA   = 30;
 
-    document.getElementById('profit').innerText = `Estimated Profit: CHF ${totalProfitCHF.toFixed(2)}`;
+  const sharesB       = 50;
+  const priceB_USD    = 98.80;
+  const rateB_CHF     = 0.8560;
+  const commissionB   = 40;
 
-    // Debug log
-    console.log("NVDA USD price:", nvdaPrice);
-    console.log("USD/CHF rate:", usdchfRate);
-    console.log("NVDA CHF price:", nvdaPriceCHF.toFixed(2));
-    console.log("avgCostCHF:", avgCostCHF.toFixed(2));
-    console.log("shares:", shares);
-    console.log("ratePercentage:", ratePercentage);
-  }
+  const totalSharesNVDA = 70;
+  const costNVDA = 
+      (sharesA * priceA_USD * rateA_CHF) + commissionA +
+      (sharesB * priceB_USD * rateB_CHF) + commissionB;
+  const avgCostCHF_NVDA = costNVDA / totalSharesNVDA;
+  const nvdaCHF = nvdaPrice * usdchfRate;
+  const profitPerShareNVDA = nvdaCHF - avgCostCHF_NVDA;
+  const totalProfitCHF_NVDA = profitPerShareNVDA * totalSharesNVDA;
+
+  const sharesGOOGL         = 70;
+  const googlBuyPriceUSD    = 189.35;
+  const googlBuyRateCHF     = 0.7960402;
+  const googlCommissionCHF  = 10;
+
+  const totalCostCHF_GOOGL = (sharesGOOGL * googlBuyPriceUSD * googlBuyRateCHF) + googlCommissionCHF;
+  const avgCostCHF_GOOGL = totalCostCHF_GOOGL / sharesGOOGL;
+  const googlCHF = googlPrice * usdchfRate;
+  const profitPerShareGOOGL = googlCHF - avgCostCHF_GOOGL;
+  const totalProfitCHF_GOOGL = profitPerShareGOOGL * sharesGOOGL;
+
+  const totalProfit = totalProfitCHF_NVDA + totalProfitCHF_GOOGL;
+  const sharedProfit = totalProfit * 0.4;
+
+  document.getElementById('profit').innerText = `Estimated Shared Profit (40%): CHF ${sharedProfit.toFixed(2)}`;
+
+  console.log("--- Debug ---");
+  console.log("NVDA CHF price:", nvdaCHF.toFixed(2));
+  console.log("GOOGL CHF price:", googlCHF.toFixed(2));
+  console.log("NVDA profit:", totalProfitCHF_NVDA.toFixed(2));
+  console.log("GOOGL profit:", totalProfitCHF_GOOGL.toFixed(2));
+  console.log("Total raw profit:", totalProfit.toFixed(2));
+  console.log("Shared 40%:", sharedProfit.toFixed(2));
+}
     </script>
   </body>
 </html>
