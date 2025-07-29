@@ -12,15 +12,12 @@
 
     <h2>Live prix action NVDA</h2>
     <div id="nvda">chargement prix NVDA...</div>
-    
-    <h2>Live profit avec l'investissement NVDA</h2>
-    <div id="profit">Calculating profit...</div>
 
     <h2>Live prix action GOOGL</h2>
     <div id="googl">chargement prix GOOGL...</div>
 
     <h2>Live profit (NVDA + GOOGL, 40%)</h2>
-    <div id="profit">Calculating combined profit...</div>
+    <div id="profit">Chargement profit combiné...</div>
 
        <script>
   const sharesA       = 20;
@@ -82,8 +79,8 @@
 
   const sharesGOOGL         = 70;
   const googlBuyPriceUSD    = 189.35;
-  const googlBuyRateCHF     = 0.7960402;
-  const googlCommissionCHF  = 10;
+  const googlBuyRateCHF     = 0.7962042;
+  const googlCommissionCHF  = 67.12;
 
   const totalCostCHF_GOOGL = (sharesGOOGL * googlBuyPriceUSD * googlBuyRateCHF) + googlCommissionCHF;
   const avgCostCHF_GOOGL = totalCostCHF_GOOGL / sharesGOOGL;
