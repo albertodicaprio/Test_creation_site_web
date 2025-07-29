@@ -1,37 +1,35 @@
-export async function handler(event, context) {
-  const apiKey = process.env.TWELVEDATA_API_KEY;
+const fetch = require('node-fetch');
 
-  if (!apiKey) {
-    console.error("clé API non présentée");
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "clé API non présentée" })
-    };
-  }
+exports.handler = async function () {
+  const API_KEY = process.env.TWELVEDATA_API_KEY;
+
+  const symbols = ['NVDA', 'GOOGL', 'USD/CHF'];
+
+  const urls = {
+    nvda: `https://api.twelvedata.com/price?symbol=NVDA&apikey=${API_KEY}`,
+    googl: `https://api.twelvedata.com/price?symbol=GOOGL&apikey=${API_KEY}`,
+    usdchf: `https://api.twelvedata.com/price?symbol=USD/CHF&apikey=${API_KEY}`
+  };
 
   try {
-    const nvdaRes = await fetch(`https://api.twelvedata.com/price?symbol=NVDA&apikey=${apiKey}`);
-    const nvdaData = await nvdaRes.json();
-
-    const usdchfRes = await fetch(`https://api.twelvedata.com/price?symbol=USD/CHF&apikey=${apiKey}`);
-    const usdchfData = await usdchfRes.json();
-
-    console.log("✅ NVDA data:", nvdaData);
-    console.log("✅ USDCHF data:", usdchfData);
+    const [nvdaRes, googlRes, fxRes] = await Promise.all([
+      fetch(urls.nvda).then(r => r.json()),
+      fetch(urls.googl).then(r => r.json()),
+      fetch(urls.usdchf).then(r => r.json())
+    ]);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        currentPrice: nvdaData.price,
-        usdchf: usdchfData.price
+        currentPrice: nvdaRes.price,
+        googlPrice: googlRes.price,
+        usdchf: fxRes.price
       })
     };
   } catch (err) {
-    console.error("Function error:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'n-a pas reussi à trouver les valeur' })
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: 'Fetch failed' }) };
+  }
+};
   }
 }
 
