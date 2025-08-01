@@ -60,6 +60,25 @@
       background-color: rgba(0, 0, 0, 0.3);
       z-index: -1;
     }
+    <div class="section">
+  <h2>Live prix échange USD/CHF</h2>
+  <div id="usdchf" class="data">chargement...</div>
+</div>
+
+<div class="section">
+  <h2>Live prix action NVDA</h2>
+  <div id="nvda" class="data">chargement...</div>
+</div>
+
+<div class="section">
+  <h2>Live prix action GOOGL</h2>
+  <div id="googl" class="data">chargement...</div>
+</div>
+
+<div class="section">
+  <h2>Live profit combiné (40%)</h2>
+  <div id="profit" class="data">chargement...</div>
+</div>
   </style>
 </head>
 <body>
@@ -71,6 +90,10 @@
       let usdchfRate = null;
       let nvdaPrice = null;
       let googlPrice = null;
+
+console.log(document.getElementById('usdchf'));
+console.log(document.getElementById('nvda'));
+console.log(document.getElementById('googl'));
 
       fetch('./.netlify/functions/getprices')
         .then(res => res.json())
