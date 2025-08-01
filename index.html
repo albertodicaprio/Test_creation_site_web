@@ -67,6 +67,7 @@
   <h1>Bienvenue à notre site web pour le voyage d'étude à Florence</h1>
   <p>Ce site est destiné à tracer le profit créé pour notre voyage d'étude.</p>
     <script>
+      window.onload = function () {
       let usdchfRate = null;
       let nvdaPrice = null;
       let googlPrice = null;
@@ -139,6 +140,7 @@
         console.log("Total raw profit:", totalProfit.toFixed(2));
         console.log("Shared 40%:", sharedProfit.toFixed(2));
       }
+        };
     </script>
   </body>
 </html>
