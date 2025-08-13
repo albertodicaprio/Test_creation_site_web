@@ -89,10 +89,11 @@ p {
   </div>
 
   <div class="section">
-    <h2>Live profit combiné<h2>
-    <div id="profit" class="data">chargement...</div>
-      
-  <div class="footer" id="timestamp"></div>
+  <h2>Profit combiné</h2>
+  <div class="data" id="profit"></div>
+</div>
+
+<div class="footer" id="timestamp"></div>
 
   <script>
     window.onload = function () {
@@ -156,6 +157,9 @@ p {
 
         const totalProfit = totalProfitCHF_NVDA + totalProfitCHF_GOOGL;
         const sharedProfit = totalProfit * 0.4;
+
+        const sixtyPercent = totalProfit * 0.6;
+        console.log("60% value:", sixtyPercent.toFixed(2));
         
         document.getElementById('profit').innerText = `Profit estimé: CHF ${sharedProfit.toFixed(2)}`;
 
